@@ -10,8 +10,10 @@ public class Usuario {
     private String apellido;
     private String gmail;
     private String fechaNacimiento;
-
-    public Usuario() {}
+    private int monedas;
+    public Usuario() {
+        this.monedas=1000;
+    }
 
     public Usuario(String username, String password,  String nombre, String apellido, String gmail, String fechaNacimiento) {
         this.username = username;
@@ -20,6 +22,7 @@ public class Usuario {
         this.apellido = apellido;
         this.gmail = gmail;
         this.fechaNacimiento = fechaNacimiento;
+        this.monedas = 1000;
     }
 
     public String getUsername() {
@@ -69,7 +72,13 @@ public class Usuario {
     public void setFechaNacimiento(String fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
+        public int getMonedas() {
+        return monedas;
+    }
 
+    public void setMonedas(int monedas) {
+        this.monedas = monedas;
+    }
     @Override
     public String toString() {
         return "Usuario{username='" + username + "'}";

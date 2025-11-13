@@ -6,5 +6,6 @@ import java.util.List;
 public interface ShopManager {
     List<Item> getItemsTienda();
     void comprarItem(String username, Integer itemId);
+    int getMonedas(String username);
 }
 

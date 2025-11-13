@@ -22,7 +22,10 @@
                         <a class="nav-link" href="#">Mi Perfil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Inventario</a>
+                        <a class="nav-link" href="#" id="btn-inventario">Inventario</a>
+                    </li>
+                    <li class="nav-item">
+                        <span id="coins-display" class="nav-link fw-bold">💰 0</span>
                     </li>
                     <li class="nav-item">
                         <button id="logout-button" class="btn btn-logout">Cerrar Sesión</button>
@@ -35,101 +38,145 @@
     <div class="container container-main">
         <h1 class="shop-h1">Tienda de Artículos</h1>
         <div class="row row-cols-1 row-cols-md-3 g-4">
-            <!-- Ejemplo de Artículo 1 -->
-            <div class="col">
-                <div class="card h-100 card-custom">
-                    <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Artículo 1">
-                    <div class="card-body">
-                        <h5 class="card-title">Coche Deportivo X-1</h5>
-                        <p class="card-text">Un coche de alta velocidad con aerodinámica avanzada para dominar las pistas.</p>
-                        <p class="price-tag">1500 Monedas</p>
-                        <button class="btn btn-buy w-100">Comprar</button>
-                    </div>
-                </div>
-            </div>
-            <!-- Ejemplo de Artículo 2 -->
-            <div class="col">
-                <div class="card h-100 card-custom">
-                    <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Artículo 2">
-                    <div class="card-body">
-                        <h5 class="card-title">Mejora de Motor Turbo</h5>
-                        <p class="card-text">Aumenta drásticamente la potencia de tu vehículo para una ventaja decisiva.</p>
-                        <p class="price-tag">750 Monedas</p>
-                        <button class="btn btn-buy w-100">Comprar</button>
-                    </div>
-                </div>
-            </div>
-            <!-- Ejemplo de Artículo 3 -->
-            <div class="col">
-                <div class="card h-100 card-custom">
-                    <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Artículo 3">
-                    <div class="card-body">
-                        <h5 class="card-title">Kit de Blindaje Reforzado</h5>
-                        <p class="card-text">Protege tu coche de los impactos y ataques enemigos con este blindaje superior.</p>
-                        <p class="price-tag">1000 Monedas</p>
-                        <button class="btn btn-buy w-100">Comprar</button>
-                    </div>
-                </div>
-            </div>
-            <!-- Puedes añadir más artículos aquí -->
+            <!-- Els ítems es carregaran dinàmicament aquí -->
         </div>
     </div>
 
     <script>
         $(document).ready(function() {
+
+            // -------------------- LOGOUT --------------------
             $('#logout-button').on('click', function() {
-                // Aquí iría la lógica para cerrar sesión, por ejemplo, limpiar tokens de sesión
-                console.log('Cerrando sesión...');
-                // Redirigir a la página de inicio o de login
+                localStorage.removeItem("username");
+                localStorage.removeItem("monedas");
+                localStorage.removeItem("inventory");
                 window.location.href = 'index.html';
             });
 
-            // Lógica para cargar artículos dinámicamente desde la API (ejemplo)
-            // $.ajax({
-            //     type: 'GET',
-            //     url: '/dsa/shop/items', // URL del endpoint de la API para obtener artículos
-            //     success: function(items) {
-            //         var shopItemsHtml = '';
-            //         items.forEach(function(item) {
-            //             shopItemsHtml += `
-            //                 <div class="col">
-            //                     <div class="card h-100 card-custom">
-            //                         <img src="${item.imageUrl}" class="card-img-top" alt="${item.name}">
-            //                         <div class="card-body">
-            //                             <h5 class="card-title">${item.name}</h5>
-            //                             <p class="card-text">${item.description}</p>
-            //                             <p class="price-tag">${item.price} Monedas</p>
-            //                             <button class="btn btn-buy w-100" data-item-id="${item.id}">Comprar</button>
-            //                         </div>
-            //                     </div>
-            //                 </div>
-            //             `;
-            //         });
-            //         $('.row.g-4').html(shopItemsHtml);
-            //     },
-            //     error: function(jqXHR, textStatus, errorThrown) {
-            //         console.error('Error al cargar artículos de la tienda:', textStatus, errorThrown);
-            //         // Mostrar un mensaje de error al usuario
-            //     }
-            // });
+            // ------------------ VALIDAR LOGIN ------------------
+            const username = localStorage.getItem("username");
+            if (!username) {
+                window.location.href = 'login.html';
+                return;
+            }
 
-            // Lógica para el botón de comprar (ejemplo)
-            // $(document).on('click', '.btn-buy', function() {
-            //     var itemId = $(this).data('item-id');
-            //     console.log('Comprar artículo:', itemId);
-            //     $.ajax({
-            //         type: 'POST',
-            //         url: '/dsa/shop/buy/' + itemId, // URL del endpoint de la API para comprar un artículo
-            //         success: function(response) {
-            //             alert('¡Artículo comprado con éxito!');
-            //             // Actualizar la interfaz de usuario, por ejemplo, el saldo del usuario
-            //         },
-            //         error: function(jqXHR, textStatus, errorThrown) {
-            //             console.error('Error al comprar artículo:', textStatus, errorThrown);
-            //             alert('Error al comprar el artículo: ' + (jqXHR.responseJSON && jqXHR.responseJSON.message ? jqXHR.responseJSON.message : 'Error desconocido'));
-            //         }
-            //     });
-            // });
+            // ------------------ MONEDES ------------------
+            function updateCoinsDisplay() {
+                const monedas = localStorage.getItem("monedas") || 0;
+                $('#coins-display').text(`💰 ${monedas}`);
+            }
+
+            function loadCoinsFromBackend() {
+                $.ajax({
+                    type: 'GET',
+                    url: '/v1/shop/monedas/' + encodeURIComponent(username),
+                    dataType: 'json', // important: jQuery ja ens dona un objecte
+                    success: function(response) {
+                        // Backend retorna {"coins":1000}
+                        const monedas = response.coins;
+                        localStorage.setItem("monedas", monedas);
+                        updateCoinsDisplay();
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error('Error obtenint monedes del backend:', textStatus, errorThrown);
+                        localStorage.setItem("monedas", 0);
+                        updateCoinsDisplay();
+                    }
+                });
+            }
+
+            loadCoinsFromBackend(); // carreguem monedes reals del backend
+
+            // ------------------ INVENTARI ------------------
+            if (!localStorage.getItem("inventory")) {
+                localStorage.setItem("inventory", JSON.stringify([]));
+            }
+
+            function addToInventory(item) {
+                const inv = JSON.parse(localStorage.getItem("inventory"));
+                inv.push(item);
+                localStorage.setItem("inventory", JSON.stringify(inv));
+            }
+
+            $('#btn-inventario').on('click', function(e) {
+                e.preventDefault();
+                const inv = JSON.parse(localStorage.getItem("inventory"));
+                if (inv.length === 0) {
+                    alert("El teu inventari està buit!");
+                    return;
+                }
+                let msg = "📦 Inventari:\n\n";
+                inv.forEach(i => {
+                    msg += `• ${i.nombre} (preu: ${i.precio})\n`;
+                });
+                alert(msg);
+            });
+
+            // ------------------ CARREGAR ITEMS ------------------
+            $.ajax({
+                type: 'GET',
+                url: '/v1/shop/items',
+                dataType: 'json',
+                success: function(items) {
+                    let shopItemsHtml = '';
+                    items.forEach(function(item) {
+                        shopItemsHtml += `
+                            <div class="col">
+                                <div class="card h-100 card-custom">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${item.nombre}</h5>
+                                        <p class="card-text">${item.descripcion}</p>
+                                        <p class="price-tag">${item.precio} Monedas</p>
+                                        <button class="btn btn-buy w-100"
+                                                data-item-id="${item.id}"
+                                                data-item-name="${item.nombre}"
+                                                data-item-price="${item.precio}">
+                                            Comprar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>`;
+                    });
+                    $('.row.g-4').html(shopItemsHtml);
+                },
+                error: function() {
+                    alert("Error al cargar los ítems de la tienda");
+                }
+            });
+
+            // ------------------ COMPRAR ITEM ------------------
+            $(document).on('click', '.btn-buy', function() {
+                const itemId = $(this).data('item-id');
+                const itemName = $(this).data('item-name');
+                const itemPrice = parseInt($(this).data('item-price'));
+                let monedas = parseInt(localStorage.getItem("monedas"));
+
+                if (monedas < itemPrice) {
+                    alert("No tens suficients monedes!");
+                    return;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/v1/shop/buy/' + itemId,
+                    contentType: 'application/json',
+                    data: JSON.stringify(username), // envia "admin" com JSON string
+                    success: function(response) {
+                        // restem monedes al front
+                        monedas -= itemPrice;
+                        localStorage.setItem("monedas", monedas);
+                        updateCoinsDisplay();
+
+                        addToInventory({ id: itemId, nombre: itemName, precio: itemPrice });
+
+                        alert('¡Has comprado: ' + itemName + '!');
+                    },
+                    error: function(jqXHR) {
+                        alert("Error al comprar el artículo:\n" + jqXHR.responseText);
+                    }
+                });
+            });
+
         });
     </script>
 </body>

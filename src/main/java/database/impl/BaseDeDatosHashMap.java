@@ -25,7 +25,8 @@ public class BaseDeDatosHashMap implements BaseDeDatos {
         Item item2 = new Item(2, "Escudo de diamante", "Un escudo indestructible", 150);
         this.items.put(item1.getId(), item1);
         this.items.put(item2.getId(), item2);
-
+        Usuario admin = new Usuario("admin", "admin123", "admin", "admin", "admin@gmail.com", "10/10/10");
+        usuarios.put("admin", admin);
         LOGGER.info("Items de prueba añadidos a la base de datos");
     }
 
@@ -77,5 +78,16 @@ public class BaseDeDatosHashMap implements BaseDeDatos {
     @Override
     public List<Usuario> getUsuarios() {
         return new ArrayList<>(usuarios.values());
+    }
+
+    public int getMonedas(String username) {
+        Usuario usuario = usuarios.get(username);
+        if (usuarios != null) return usuario.getMonedas();
+        return -1;
+    }
+
+    public void setMonedas(String username, int monedas) {
+        Usuario usuario = usuarios.get(username);
+        if (usuario != null) usuario.setMonedas(monedas);
     }
 }

@@ -1,6 +1,7 @@
 package services;
 
 import database.models.Item;
+import database.models.Usuario;
 import manager.ShopManagerImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -51,6 +52,10 @@ public class ShopService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response comprarItem(@PathParam("id") Integer itemId, String username) {
         try {
+            if (username != null) {
+                username = username.replace("\"", "").trim();
+            }
+
             shopManager.comprarItem(username, itemId);
             return Response.status(Response.Status.OK)
                     .entity("{\"message\": \"Item comprado correctamente\"}")
@@ -60,6 +65,22 @@ public class ShopService {
                     .entity("{\"error\": \"" + e.getMessage() + "\"}")
                     .build();
         }
+    }
+    @GET
+    @Path("/monedas/{username}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCoins(@PathParam("username") String username) {
+
+        username = username.replace("\"", "").trim();
+
+        int monedas = this.shopManager.getMonedas(username);
+
+        if (monedas < 0) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"error\":\"Monedas insuficientes de : " + username + "\"}" + monedas).build();
+        }
+
+        return Response.ok("{\"coins\":" + monedas + "}").build();
     }
 }
 

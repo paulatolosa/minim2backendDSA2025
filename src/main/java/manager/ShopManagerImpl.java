@@ -45,9 +45,20 @@ public class ShopManagerImpl implements ShopManager {
             LOGGER.error("Intento de compra fallido: Item no encontrado: " + itemId);
             throw new RuntimeException("Item no encontrado");
         }
+        int monedas = usuario.getMonedas();
+        if (monedas < item.getPrecio()) throw new RuntimeException("Monedas insuficientes");;
+
+        usuario.setMonedas(monedas - item.getPrecio());
 
         LOGGER.info("Usuario '" + username + "' ha comprado el item: " + item);
         // Aquí se implementaría la lógica de compra (descontar dinero, añadir item al inventario, etc.)
     }
+    @Override
+    public int getMonedas(String username) {
+        Usuario u = this.baseDeDatos.getUsuario(username);
+        if (u == null) return -1;
+        return u.getMonedas();
+    }
+
 }
 
