@@ -82,5 +82,38 @@ public class ShopService {
 
         return Response.ok("{\"coins\":" + monedas + "}").build();
     }
+    @GET
+    @Path("/perfil/{username}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPerfil(@PathParam("username") String usernameJson) {
+
+        usernameJson = usernameJson.replace("\"", "").trim();
+        Usuario u = shopManager.getPerfil(usernameJson);
+
+        if (u == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"error\":\"Usuario no encontrado: " + usernameJson + "\"}")
+                    .build();
+        }
+
+        String json = String.format(
+                "{" +
+                        "\"username\":\"%s\"," +
+                        "\"nombre\":\"%s\"," +
+                        "\"apellido\":\"%s\"," +
+                        "\"email\":\"%s\"," +
+                        "\"monedas\":%d," +
+                        "\"mejorPuntuacion\":%d" +
+                        "}",
+                u.getUsername(),
+                u.getNombre(),
+                u.getApellido(),
+                u.getGmail(),
+                u.getMonedas(),
+                u.getMejorPuntuacion()
+        );
+
+        return Response.ok(json).build();
+    }
 }
 

@@ -11,6 +11,7 @@ public class Usuario {
     private String gmail;
     private String fechaNacimiento;
     private int monedas;
+    private int mejorPuntuacion;
     public Usuario() {
         this.monedas=1000;
     }
@@ -23,6 +24,7 @@ public class Usuario {
         this.gmail = gmail;
         this.fechaNacimiento = fechaNacimiento;
         this.monedas = 1000;
+        this.mejorPuntuacion = 0;
     }
 
     public String getUsername() {
@@ -78,6 +80,10 @@ public class Usuario {
 
     public void setMonedas(int monedas) {
         this.monedas = monedas;
+    }
+    public int  getMejorPuntuacion() { return mejorPuntuacion; }
+    public void setMejorPuntuacion(int mejorPuntuacion) {
+        this.mejorPuntuacion = mejorPuntuacion;
     }
     @Override
     public String toString() {

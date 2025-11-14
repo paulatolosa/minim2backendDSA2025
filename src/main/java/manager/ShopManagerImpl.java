@@ -59,6 +59,16 @@ public class ShopManagerImpl implements ShopManager {
         if (u == null) return -1;
         return u.getMonedas();
     }
+    @Override
+    public Usuario getPerfil(String username){
+        return this.baseDeDatos.getUsuario(username);
+    }
+
+    public int getMejorPuntuacion(String username) {
+        Usuario u = this.baseDeDatos.getUsuario(username);
+        if (u == null) return -1;
+        return u.getMejorPuntuacion();
+    }
 
 }
 
