@@ -57,6 +57,7 @@ public class ShopManagerImpl implements ShopManager {
     @Override
     public int getMonedas(String username) {
         Usuario u = this.baseDeDatos.getUsuario(username);
+        LOGGER.info("monedas:"+u.getMonedas());
         if (u == null) return -1;
         return u.getMonedas();
     }
