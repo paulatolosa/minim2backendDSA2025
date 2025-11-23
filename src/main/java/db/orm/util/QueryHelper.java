@@ -40,11 +40,8 @@ public class QueryHelper {
 
 
     public static String createSelectFindAll(Class theClass, HashMap params) {
-
         StringBuilder query = new StringBuilder();
         query.append("SELECT * FROM ").append(theClass.getSimpleName());
-
-        // --- PROTECCIÓ CLAU: NOMÉS AFEGIM EL WHERE SI PARAMS NO ÉS NULL ---
         if (params != null && !params.isEmpty()) {
             query.append(" WHERE 1=1");
 

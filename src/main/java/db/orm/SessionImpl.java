@@ -117,7 +117,6 @@ public class SessionImpl implements Session {
     }
     @Override
     public List<Object> findAll(Class theClass) {
-        // Reutilitzem el codi passant un HashMap null o buit
         return this.findAll(theClass, null);
     }
     public List<Object> query(String query, Class theClass, HashMap params) {

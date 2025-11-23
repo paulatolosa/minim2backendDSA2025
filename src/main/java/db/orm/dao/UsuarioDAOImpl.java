@@ -14,7 +14,6 @@ public class UsuarioDAOImpl implements IUsuarioDAO {
     private static UsuarioDAOImpl instance;
 
     private UsuarioDAOImpl() {
-        // Constructor privat perquè ningú faci "new UsuarioDAOImpl()"
     }
     public static UsuarioDAOImpl getInstance() {
         if (instance == null) {
@@ -41,9 +40,6 @@ public class UsuarioDAOImpl implements IUsuarioDAO {
         return ID;
     }
 
-
-
-
     public Usuario getUsuario(int ID) {
        Session session = null;
         Usuario usuario = null;
@@ -63,36 +59,24 @@ public class UsuarioDAOImpl implements IUsuarioDAO {
     public Usuario getUsuarioByEmail(String email) {
         Session session = FactorySession.openSession();
         try {
-            // 1. Preparem el filtre (WHERE gmail = ...)
             HashMap<String, Object> params = new HashMap<>();
             params.put("gmail", email);
-
-            // 2. Cridem a la base de dades
             List<Object> result = session.findAll(Usuario.class, params);
-
-            // 3. Retornem el primer resultat o null si està buida
-            // (Operador ternari: Si està buida ? torna null : torna el primer element)
             return result.isEmpty() ? null : (Usuario) result.get(0);
-
         } catch (Exception e) {
-            e.printStackTrace(); //per veure errors per consola
+            e.printStackTrace();
             return null;
         } finally {
-            session.close(); // Sempre tanquem la porta en sortir
+            session.close();
         }
     }
     @Override
     public Usuario getUsuarioByUsername(String username) {
         Session session = FactorySession.openSession();
         try {
-            // 1. Creem el filtre: WHERE username = ?
-            java.util.HashMap<String, Object> params = new java.util.HashMap<>();
-            params.put("username", username); // La clau ha de ser igual al nom de la variable a Usuario.java
-
-            // 2. Cridem al findAll que acabes de programar
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("username", username);
             List<Object> result = session.findAll(Usuario.class, params);
-
-            // 3. Retornem el resultat
             return result.isEmpty() ? null : (Usuario) result.get(0);
 
         } catch (Exception e) {

@@ -20,8 +20,6 @@ public class ItemDAOImpl implements IItemDAO {
         Session session = FactorySession.openSession();
         List<Item> items = null;
         try {
-            // Fem servir el findAll genèric
-            // Nota: Cal fer el cast (List<Item>)(List<?>) perquè findAll retorna Objects
             items = (List<Item>)(List<?>) session.findAll(Item.class);
         } catch (Exception e) {
             e.printStackTrace();
