@@ -19,6 +19,7 @@
         <div class="mb-3">
             <label for="username" class="form-label">Usuario</label>
             <input type="text" class="form-control" id="username" name="username" required>
+            <small id="username-error" class="text-danger" style="display: none;"></small>
         </div>
 
         <div class="mb-3">
@@ -35,20 +36,24 @@
         <div class="mb-3">
             <label for="nombre" class="form-label">Nombre</label>
             <input type="text" class="form-control" id="nombre" name="nombre" required>
+            <small id="nombre-error" class="text-danger" style="display: none;"></small>
         </div>
 
         <div class="mb-3">
             <label for="apellido" class="form-label">Apellido</label>
             <input type="text" class="form-control" id="apellido" name="apellido" required>
+            <small id="apellido-error" class="text-danger" style="display: none;"></small>
         </div>
         <div class="mb-3">
             <label for="mail" class="form-label">Mail</label>
             <input type="email" class="form-control" id="mail" name="mail" required>
+            <small id="mail-error" class="text-danger" style="display: none;"></small>
         </div>
 
         <div class="mb-3">
             <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento</label>
             <input type="date" class="form-control" id="fechaNacimiento" name="fechaNacimiento" required>
+            <small id="fecha-error" class="text-danger" style="display: none;"></small>
         </div>
 
         <button type="submit" class="btn btn-primary-custom">Registrarse</button>
@@ -79,6 +84,16 @@
             $('#fechaNacimiento').attr('min', cutoffStrMin);
         })();
 
+        $('#register-form input').on('input', function() {
+            const id = $(this).attr('id');
+            $(this).removeClass('is-invalid');
+            $('#' + id + '-error').hide();
+            if (id === 'password' || id === 'confirm-password') {
+                $('#password-match-message').hide();
+            }
+        });
+
+
         $('#password, #confirm-password').on('input', function() {
             const password = $('#password').val();
             const confirmPassword = $('#confirm-password').val();
@@ -106,10 +121,12 @@
             const mail = $('#mail').val();
             const fechaNacimiento = $('#fechaNacimiento').val();
 
+            let valid = true;
+
             if (password !== confirmPassword) {
-                $('#error-message').text('Las contraseñas no coinciden.').show();
+                $('#password-match-message').text('Las contraseñas no coinciden.').show();
                 $('#password, #confirm-password').addClass('is-invalid');
-                return;
+                valid=false;
             }
 
             // ===============================================
@@ -120,22 +137,33 @@
             const regexNombreApellido = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
 
             if (!regexUsername.test(username)) {
-                $('#error-message').text('El Usuario solo puede contener letras y números.').show();
+                $('#username-error').text('El Usuario solo puede contener letras y números.').show();
                 $('#username').addClass('is-invalid');
-                return;
+                valid= false;
             }
 
             if (!regexNombreApellido.test(nombre)) {
-                $('#error-message').text('El Nombre no puede contener números ni caracteres especiales.').show();
+                $('#nombre-error').text('El Nombre no puede contener números ni caracteres especiales.').show();
                 $('#nombre').addClass('is-invalid');
-                return;
+                valid = false;
             }
 
             if (!regexNombreApellido.test(apellido)) {
-                $('#error-message').text('El Apellido no puede contener números ni caracteres especiales.').show();
+                $('#apellido-error').text('El Apellido no puede contener números ni caracteres especiales.').show();
                 $('#apellido').addClass('is-invalid');
-                return;
+                valid = false;
             }
+
+            // VALIDACIÓN DE EMAIL
+
+            const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            if (!regexEmail.test(mail)) {
+                $('#mail-error').text('El correo electrónico no tiene un formato válido.').show();
+                $('#mail').addClass('is-invalid');
+                valid = false;
+            }
+
 
             // ===============================================
             // VALIDACIÓN DE FECHA DE NACIMIENTO (Mínimo 16 años)
@@ -144,17 +172,17 @@
             const MIN_AGE = 16;
             const MAX_AGE = 122;
             if (!fechaNacimiento) {
-                $('#error-message').text('La fecha de nacimiento es obligatoria.').show();
+                $('#fecha-error').text('La fecha de nacimiento es obligatoria.').show();
                 $('#fechaNacimiento').addClass('is-invalid');
-                return;
+                valid = false;
             }
             const birthDate = new Date(fechaNacimiento);
             const today = new Date();
             // Fecha futura
             if (birthDate > today) {
-                $('#error-message').text('La fecha de nacimiento no puede ser futura.').show();
+                $('#fecha-error').text('La fecha de nacimiento no puede ser futura.').show();
                 $('#fechaNacimiento').addClass('is-invalid');
-                return;
+                valid = false;
             }
             // Calcular edad
             let age = today.getFullYear() - birthDate.getFullYear();
@@ -163,15 +191,17 @@
                 age--;
             }
             if (age < MIN_AGE) {
-                $('#error-message').text('Debes tener al menos ' + MIN_AGE + ' años para registrarte.').show();
+                $('#fecha-error').text('Debes tener al menos ' + MIN_AGE + ' años para registrarte.').show();
                 $('#fechaNacimiento').addClass('is-invalid');
-                return;
+                valid = false;
             }
             if (age > MAX_AGE) {
-                $('#error-message').text('No eres tan viejo, no intentes registrarte con más de ' + MAX_AGE + ' años.').show();
+                $('#fecha-error').text('No eres tan viejo, no intentes registrarte con más de ' + MAX_AGE + ' años.').show();
                 $('#fechaNacimiento').addClass('is-invalid');
-                return;
+                valid = false;
             }
+
+    if(!valid) return;
 
             // ===============================================
             // FIN: VALIDACIÓN
