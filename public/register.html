@@ -96,6 +96,35 @@
                 return;
             }
 
+            // ===============================================
+            // INICIO: VALIDACIÓN DE CARACTERES ESPECIALES EN CAMPOS NO-EMAIL
+            // ===============================================
+
+            const regexUsername = /^[a-zA-Z0-9]+$/;
+            const regexNombreApellido = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+
+            if (!regexUsername.test(username)) {
+                $('#error-message').text('El Usuario solo puede contener letras y números.').show();
+                $('#username').addClass('is-invalid');
+                return;
+            }
+
+            if (!regexNombreApellido.test(nombre)) {
+                $('#error-message').text('El Nombre no puede contener números ni caracteres especiales.').show();
+                $('#nombre').addClass('is-invalid');
+                return;
+            }
+
+            if (!regexNombreApellido.test(apellido)) {
+                $('#error-message').text('El Apellido no puede contener números ni caracteres especiales.').show();
+                $('#apellido').addClass('is-invalid');
+                return;
+            }
+
+            // ===============================================
+            // FIN: VALIDACIÓN
+            // ===============================================
+
             $.ajax({
                 url: '/v1/auth/register',
                 type: 'POST',

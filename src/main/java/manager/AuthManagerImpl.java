@@ -25,9 +25,41 @@ public class AuthManagerImpl implements AuthManager {
         return instance;
     }
 
+    // ==========================
+    // VALIDACIÓN DE REGISTRO
+    // ==========================
+    // Método interno que valida username, nombre y apellido para evitar
+    // caracteres especiales en campos no-email.
+    private void validateRegistrationData(Usuario usr) {
+        if (usr == null) {
+            throw new RuntimeException("Datos de usuario inválidos");
+        }
+
+        // username: solo letras y números, sin espacios ni caracteres especiales
+        String regexUsername = "^[a-zA-Z0-9]+$";
+        // nombre/apellido: letras, acentos y espacios
+        String regexNombre = "^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$";
+
+        if (usr.getUsername() == null || !usr.getUsername().matches(regexUsername)) {
+            throw new RuntimeException("El usuario solo puede contener letras y números (sin espacios ni caracteres especiales).");
+        }
+
+        if (usr.getNombre() == null || !usr.getNombre().matches(regexNombre)) {
+            throw new RuntimeException("El nombre solo puede contener letras y espacios.");
+        }
+
+        if (usr.getApellido() == null || !usr.getApellido().matches(regexNombre)) {
+            throw new RuntimeException("El apellido solo puede contener letras y espacios.");
+        }
+        // No validamos password ni email/fecha aquí porque tienen sus propias reglas.
+    }
+
     @Override
     public void register(Usuario usr) {
-        LOGGER.info(" Inicio login: username: " + usr.getUsername()+ " password: " + usr.getPassword()+" nombre: " + usr.getNombre() +" apellido: " + usr.getApellido()+" gmail: " + usr.getEmail()+" fechaNacimiento: " + usr.getFechaNacimiento());
+        // Validación preventiva: evita que clientes puedan registrar usernames con caracteres especiales
+        validateRegistrationData(usr);
+
+        LOGGER.info(" Inicio registro: username: " + usr.getUsername()+ " password: " + usr.getPassword()+" nombre: " + usr.getNombre() +" apellido: " + usr.getApellido()+" gmail: " + usr.getEmail()+" fechaNacimiento: " + usr.getFechaNacimiento());
         if (baseDeDatos.getUsuario(usr.getUsername()) != null) {
             LOGGER.error("Intento de registro fallido: El usuario ya existe: " + usr);
             throw new RuntimeException("El usuario ya existe");
