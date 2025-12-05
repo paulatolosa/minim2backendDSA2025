@@ -11,5 +11,5 @@ public interface Session<E> {
     //void delete(Object object);                                         // cruD
     List<Object> findAll(Class theClass);                               // cR
     List<Object> findAll(Class theClass, HashMap params);
-    List<Object> query(String query, Class theClass, HashMap params);
+    List<Object> query(Class theClass, String query, HashMap params);
 }

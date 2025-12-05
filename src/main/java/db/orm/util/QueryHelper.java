@@ -68,4 +68,10 @@ public class QueryHelper {
         sb.append(" WHERE ID= ?");
         return sb.toString();
     }
+    public static String ordenateQuery(Class theClass, String ordenateByField) {
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT * FROM ").append(theClass.getSimpleName());
+        query.append(" ORDER BY ").append(ordenateByField).append(" DESC");
+        return query.toString();
+    }
 }

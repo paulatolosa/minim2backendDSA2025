@@ -6,13 +6,17 @@ import db.orm.FactorySession;
 import db.orm.Session;
 import db.orm.model.Item;
 import db.orm.model.Usuario;
+import db.orm.util.QueryHelper;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 public class UsuarioDAOImpl implements IUsuarioDAO {
 
     private static UsuarioDAOImpl instance;
+    private int mejorPuntuacion;
 
     private UsuarioDAOImpl() {
     }
@@ -102,7 +106,22 @@ public class UsuarioDAOImpl implements IUsuarioDAO {
 
         }
     }
-
+    @Override
+    public List<Usuario> getUsuariosRanking() {
+        Usuario usuario = null;
+        Session session = FactorySession.openSession();
+        List<Usuario> usersRanking = null;
+        try {
+            String sql = QueryHelper.ordenateQuery(Usuario.class, "mejorPuntuacion");
+            usersRanking = session.query(Usuario.class, sql, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(session != null){
+                session.close();
+            }
+        }return usersRanking;
+    }
 
     public void deleteUsuario(int ID) {
         /*Employee employee = this.getEmployee(employeeID);

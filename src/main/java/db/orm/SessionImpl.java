@@ -140,7 +140,42 @@ public class SessionImpl implements Session {
     }
 
     @Override
-    public List<Object> query(String query, Class theClass, HashMap params) {
-        return null;
+    public List<Object> query(Class theClass, String query, HashMap params) {
+        List<Object> resultList = new ArrayList<>();
+        PreparedStatement pstm = null;
+
+        try {
+            // 1. Preparem la SQL que ens arriba (ja construïda pel QueryHelper)
+            pstm = conn.prepareStatement(query);
+
+            int i = 1;
+            if (params != null) {
+                for (Object value : params.values()) {
+                    pstm.setObject(i++, value);
+                }
+            }
+
+            // 2. Executem
+            ResultSet rs = pstm.executeQuery();
+
+            // 3. Mapem (Convertim SQL -> Java Object)
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int numColumns = rsmd.getColumnCount();
+
+            while (rs.next()) {
+                Object entity = theClass.getDeclaredConstructor().newInstance();
+                for (int j = 1; j <= numColumns; j++) {
+                    String columnName = rsmd.getColumnName(j);
+                    Object columnValue = rs.getObject(j);
+                    ObjectHelper.setter(entity, columnName, columnValue);
+                }
+                resultList.add(entity);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultList;
     }
+
 }

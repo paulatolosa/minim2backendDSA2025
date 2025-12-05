@@ -85,11 +85,24 @@ public class ShopManagerImpl implements ShopManager {
     }
     @Override
     public List<Usuario> getRanking() {
-        List<Usuario> ranking = usuarioDAO.getUsuarios();
-        if (ranking != null){
-            ranking.sort((u1,u2) -> Integer.compare(u2.getMejorPuntuacion(), u1.getMejorPuntuacion()));
-        }
+        List<Usuario> ranking = usuarioDAO.getUsuariosRanking();
         return ranking;
+    }
+    public List<Item> getItemByUsuario(String username){
+        Usuario u = this.usuarioDAO.getUsuarioByUsername(username);
+        LOGGER.info("Obtingent items de inventari de: " + u.getUsername());
+        if (u == null) return null;
+        List<Inventario> inventarioList = this.inventarioDAO.getInventario(u.getId());
+        List<Item> itemList = new ArrayList<>();
+        if(inventarioList != null){
+            for(Inventario inventario : inventarioList){
+                Item item = itemDAO.getItem(inventario.getId());
+                if(inventarioList != null){
+                    itemList.add(item);
+                    LOGGER.info("Item en inventario encontrado " + item.getNombre());
+                }
+            }
+        }return itemList;
     }
 
 

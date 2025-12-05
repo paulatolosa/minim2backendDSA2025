@@ -73,7 +73,6 @@ public class ShopService {
             return Response.status(404).entity(new MessageResponse("Usuari no trobat")).build();
         }
 
-        // AQUÍ ESTÀ LA MÀGIA: Retornem un objecte, no un Map
         return Response.ok(new CoinsResponse(monedas)).build();
     }
     @GET
@@ -99,6 +98,17 @@ public class ShopService {
         GenericEntity<List<Usuario>> entity = new GenericEntity<List<Usuario>>(ranking) {};
         return Response.status(200).entity(entity).build();
     }
-
+    @GET
+    @Path("/inventario/{username}")
+    @ApiOperation(value = "Obtenir inventari d'un usuari")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getInventario(@PathParam("username") String username) {
+        List<Item> inventory = shopManager.getItemByUsuario(username);
+        if (inventory == null) {
+            return Response.status(404).entity(new MessageResponse("Usuari no trobat")).build();
+        }
+        GenericEntity<List<Item>> entity = new GenericEntity<List<Item>>(inventory) {};
+        return Response.status(200).entity(entity).build();
+    }
 }
 
