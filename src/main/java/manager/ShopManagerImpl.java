@@ -98,7 +98,7 @@ public class ShopManagerImpl implements ShopManager {
         List<Item> itemList = new ArrayList<>();
         if(inventarioList != null){
             for(Inventario inventario : inventarioList){
-                Item item = itemDAO.getItem(inventario.getId());
+                Item item = itemDAO.getItem(inventario.getItemId());
                 if(inventarioList != null){
                     itemList.add(item);
                     LOGGER.info("Item en inventario encontrado " + item.getNombre());

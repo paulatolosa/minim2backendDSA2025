@@ -26,7 +26,7 @@ public class ObjectHelper {
         Class theClass = object.getClass();
         Field[] fields = theClass.getDeclaredFields();
         for (Field f: fields) {
-            if (f.getName().equals(property)) {
+            if (f.getName().equalsIgnoreCase(property)) {
                 f.setAccessible(true);//por si el atributo es private nos deja modificarlo esta linea
                 try {
                     f.set(object, value);
@@ -46,7 +46,7 @@ public class ObjectHelper {
         Field[] fields = theClass.getDeclaredFields();
         for (Field f: fields) {
 
-            if (f.getName().equals(property)) {
+            if (f.getName().equalsIgnoreCase(property)) {
                 f.setAccessible(true);//por si el atributo es private nos deja modificarlo esta linea
                 try {
                     return f.get(object);

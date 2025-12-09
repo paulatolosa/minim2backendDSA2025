@@ -14,4 +14,10 @@ public class Inventario {
     public void setId(int ID) {this.ID = ID;}
     public int getUsuarioId() {return usuarioId;}
     public void setUsuarioId(int usuarioId) {this.usuarioId = usuarioId;}
+    public int getItemId() {
+        return itemId;
+    }
+    public void setItemId(int itemId) {
+        this.itemId = itemId;
+    }
 }

@@ -32,7 +32,7 @@ public class SessionImpl implements Session {
             }
 
             // IMPORTANT: Fem executeUpdate() per a INSERTS, no executeQuery()
-            pstm.executeQuery();
+            pstm.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();

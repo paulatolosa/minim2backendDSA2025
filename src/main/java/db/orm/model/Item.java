@@ -22,7 +22,7 @@ public class Item {
     }
 
     public void setId(int id) {
-        this.ID = ID;
+        this.ID = id;
     }
 
     public String getNombre() {
@@ -50,7 +50,7 @@ public class Item {
     }
     public String getImagen() { return  imagen;}
     public void setImagen(String imatge) {
-        this.imagen = imagen;
+        this.imagen = imatge;
     }
     @Override
     public String toString() {
