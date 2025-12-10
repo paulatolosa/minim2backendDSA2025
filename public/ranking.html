@@ -99,8 +99,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-    // --- Cargar monedas del usuario ---
-    function loadUserCoins() {
+    function loadUserCoins(username) {
         $.ajax({
             type: 'GET',
             url: '/v1/shop/monedas/' + username,
@@ -113,9 +112,9 @@
             }
         });
     }
+
     $(document).ready(function () {
 
-        // Obtener username
         const username = localStorage.getItem("username");
         if (!username) {
             window.location.href = "login.html";
@@ -123,16 +122,13 @@
         }
         $('#username-display').text(username);
 
+        loadUserCoins(username);
 
-        loadUserCoins(); // Llamada para cargar las monedas
-
-        // --- Cargar ranking ---
         $.ajax({
             type: "GET",
             url: "/v1/shop/ranking",
             dataType: "json",
             success: function (data) {
-
                 let html = "";
                 data.forEach(function (user, index) {
                     html += `
@@ -144,7 +140,6 @@
                     </tr>
                 `;
                 });
-
                 $("#ranking-body").html(html);
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -154,6 +149,7 @@
         });
 
     });
+
 
 </script>
 </body>
