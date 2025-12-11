@@ -457,6 +457,23 @@ body.clean-background2 {
     border-color: rgba(255, 215, 0, 0.7);
 }
 
+.btn-login {
+    background-image: url('../img/bluerectbttn.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    border: none !important;
+    color: #fff !important;
+    font-family: 'Press Start 2P', sans-serif;
+    font-size: 14px;
+    letter-spacing: 1px;
+
+    padding: 14px 0;
+    text-shadow: 2px 2px 2px black;
+
+    transition: transform 0.1s ease-in-out;
+}
 
 .btn-buy {
     background-image: url('../img/redrectbttn.png');
