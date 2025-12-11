@@ -140,6 +140,8 @@
 
         $('#username-display').text(username);
 
+        $('#btn-logout').click(function(e) { e.preventDefault(); localStorage.clear(); window.location.href = "index.html"; });
+
         loadUserCoins(username);
 
         // Cargar datos del perfil desde el backend
