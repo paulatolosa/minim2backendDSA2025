@@ -29,6 +29,7 @@
         <div class="mb-3 text-start">
             <label for="password" class="form-label">Contraseña</label>
             <input type="password" class="form-control" id="password" name="password" required>
+            <small id="password-error" class="text-danger" style="display: none;"></small>
         </div>
 
         <div class="mb-3 text-start">
@@ -63,7 +64,6 @@
 
 <!--        <button type="submit" class="game-btn game-btn-blue">Registrarse</button>-->
         <button class="btn btn-buy w-100 py-2 rounded-pill shadow-sm btn-buy">Registrarse</button>
-
     </form>
 
     <div class="footer-text mt-3">
@@ -137,6 +137,18 @@
                 valid=false;
             }
 
+            //Validación de contraseña fuerte
+            const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/;
+
+            if (!regex.test(password)){
+                $('#password-error').text("La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.").show();
+                $('#password').addClass('is-invalid');
+                return;
+            } else {
+                $('#password-error').hide();
+            }
+
+
             // ===============================================
             // INICIO: VALIDACIÓN DE CARACTERES ESPECIALES EN CAMPOS NO-EMAIL
             // ===============================================
@@ -209,7 +221,7 @@
                 valid = false;
             }
 
-    if(!valid) return;
+            if(!valid) return;
 
             // ===============================================
             // FIN: VALIDACIÓN
